@@ -128,6 +128,11 @@ details p{margin:0 0 26px;color:var(--soft);max-width:60ch}
 .stat-label{font-size:18px;color:var(--soft)}
 .btn-big{display:inline-flex;align-items:center;gap:32px;min-height:56px;padding:22px 40px;background:var(--white);color:#141414;border-radius:6px;font-size:16px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;transition:gap .25s,background .25s}
 .btn-big:hover{background:#fff;gap:40px}
+.cta-group{display:flex;flex-direction:column;align-items:center;gap:22px}
+.mail-alt{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 18px;font-size:14px;color:var(--soft)}
+.mail-alt .hint{flex-basis:100%;color:var(--white)}
+.mail-alt a,.mail-alt button{background:none;border:0;border-bottom:1px solid var(--soft);padding:6px 0;font:inherit;color:var(--soft);cursor:pointer}
+.mail-alt a:hover,.mail-alt button:hover{color:var(--white);border-color:var(--white)}
 @media (max-width:600px){.chat-card{min-height:560px;padding:72px 20px 64px}.stat{flex-direction:column;gap:10px}}
 
 /* footer */
@@ -172,7 +177,7 @@ dialog::backdrop{background:rgba(0,0,0,.85)}
   <div class="wrap">
     <a class="logo" href="#top" aria-label="Shots with George, home">Shotswithgeorge</a>
     <nav class="menu"><a href="#top">Home</a><a href="#work">Work</a><a href="#services">Services</a></nav>
-    <a class="btn-white" href="#contact">Contact
+    <a class="btn-white" href="mailto:info@shotswithgeorge.com?subject=Video%20enquiry">Contact
       <svg width="34" height="12" viewBox="0 0 34 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M0 6h32M27 1l5 5-5 5"/></svg>
     </a>
   </div>
@@ -242,9 +247,17 @@ dialog::backdrop{background:rgba(0,0,0,.85)}
       <div class="chat-bg" aria-hidden="true"></div>
       <div class="chat-top"><span class="chat-label">Let's chat</span><span class="chat-line" aria-hidden="true"></span></div>
       <div class="stat"><span class="num" id="views" data-target="169000">169K</span><span class="stat-label">Views for clients</span></div>
-      <a class="btn-big" href="mailto:info@shotswithgeorge.com?subject=Video%20enquiry">Contact
-        <svg width="64" height="14" viewBox="0 0 64 14" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M0 7h62M56 1l6 6-6 6"/></svg>
-      </a>
+      <div class="cta-group">
+        <a class="btn-big" href="mailto:info@shotswithgeorge.com?subject=Video%20enquiry">Contact
+          <svg width="64" height="14" viewBox="0 0 64 14" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M0 7h62M56 1l6 6-6 6"/></svg>
+        </a>
+        <div class="mail-alt">
+          <span class="hint" id="mail-hint" hidden>No email app opened? Copy the address or open Gmail.</span>
+          <span id="mail-text">info@shotswithgeorge.com</span>
+          <button type="button" id="copy-mail">Copy</button>
+          <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=info%40shotswithgeorge.com&amp;su=Video%20enquiry" target="_blank" rel="noopener">Open in Gmail</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -369,6 +382,27 @@ document.addEventListener('keydown',e=>{if(!lb.open||photos.length<2)return;if(e
 let sx=null;
 lb.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
 lb.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)>50&&photos.length>1)step(dx<0?1:-1);});
+
+// email: the links open a draft. If no mail app answers (none set up, or a blocked preview),
+// bring the visitor to the copy / Gmail options in the contact card.
+const MAIL='info@shotswithgeorge.com';
+const mailHint=document.getElementById('mail-hint'),mailText=document.getElementById('mail-text'),copyBtn=document.getElementById('copy-mail');
+document.querySelectorAll('a[href^="mailto:"]').forEach(a=>a.addEventListener('click',()=>{
+  let away=false;const mark=()=>{away=true;};
+  addEventListener('blur',mark);document.addEventListener('visibilitychange',mark);
+  setTimeout(()=>{
+    removeEventListener('blur',mark);document.removeEventListener('visibilitychange',mark);
+    if(away)return;
+    mailHint.hidden=false;document.querySelector('.chat-card').scrollIntoView({behavior:'smooth',block:'center'});
+  },1500);
+}));
+copyBtn.addEventListener('click',async()=>{
+  let ok=false;
+  try{await navigator.clipboard.writeText(MAIL);ok=true;}catch(e){}
+  if(!ok){const r=document.createRange();r.selectNodeContents(mailText);const s=getSelection();s.removeAllRanges();s.addRange(r);try{ok=document.execCommand('copy');}catch(e){}}
+  copyBtn.textContent=ok?'Copied':'Selected, press Ctrl/⌘+C';
+  setTimeout(()=>{copyBtn.textContent='Copy';},2200);
+});
 
 // views count: quick to 149K, then the last 20K over 6 seconds
 const views=document.getElementById('views');
