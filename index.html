@@ -73,12 +73,11 @@ section{padding:96px 0}
 .card-row .t{font-size:19px}
 .card-row .c{color:var(--muted);font-size:14px;white-space:nowrap}
 
-/* photography */
-.photos{columns:3;column-gap:20px}
-@media (max-width:900px){.photos{columns:2;column-gap:12px}}
-.photo{display:block;width:100%;margin:0 0 20px;padding:0;border:0;border-radius:var(--r);overflow:hidden;background:var(--tile);cursor:zoom-in;break-inside:avoid}
-@media (max-width:900px){.photo{margin-bottom:12px}}
-.photo img{display:block;width:100%;height:auto;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+/* photography: rows of equal height, no photo is cropped (rows are built in the script) */
+.photos{display:flex;flex-direction:column;gap:12px}
+.prow{display:flex;gap:12px}
+.photo{flex:none;display:block;padding:0;border:0;border-radius:var(--r);overflow:hidden;background:var(--tile);cursor:zoom-in}
+.photo img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
 .photo:hover img{transform:scale(1.03)}
 
 /* coming soon */
@@ -276,8 +275,8 @@ dialog::backdrop{background:rgba(0,0,0,.85)}
     <div class="bottom">
       <span>© 2026 Shots with George · GSNmedia</span>
       <div class="social">
-        <a href="https://www.instagram.com/shotswithgeorge/" target="_blank" rel="noopener" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
-        <a href="https://www.youtube.com/@shotswithgeorge/featured" target="_blank" rel="noopener" aria-label="YouTube"><svg width="20" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="M10 9v6l5-3z" fill="currentColor"/></svg></a>
+        <a href="https://www.instagram.com/shotswithgeorge/" target="_blank" rel="noopener" aria-label="Instagram" title="@shotswithgeorge on Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
+        <a href="https://www.youtube.com/@shotswithgeorge/featured" target="_blank" rel="noopener" aria-label="YouTube" title="@shotswithgeorge on YouTube"><svg width="20" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="M10 9v6l5-3z" fill="currentColor"/></svg></a>
       </div>
     </div>
   </div>
@@ -299,11 +298,13 @@ dialog::backdrop{background:rgba(0,0,0,.85)}
 </dialog>
 
 <script>
-// PHOTOS: put the image files in a "photos" folder and add one line per photo.
-//   src = the large image (opens in the viewer), thumb = optional smaller copy for the grid,
-//   w / h = pixel size (stops the page jumping while images load), alt = short description.
+// PHOTOS: one line per photo, shown in this order.
+//   src = large image (opens in the viewer), thumb = smaller copy used in the grid (1600px),
+//   w / h = pixel size of src (needed to lay the rows out), alt = description for screen readers,
+//   title = optional caption shown in the viewer.
 const photos=[
-  // {src:"photos/01.jpg",thumb:"photos/thumbs/01.jpg",w:2000,h:1333,alt:"Describe the photo"},
+  {src:"photos/autumn-forest-road.jpg",thumb:"photos/thumbs/autumn-forest-road.jpg",w:1125,h:2000,alt:"White SUV on a winding forest road in autumn, seen past a mossy tree trunk"},
+  {src:"photos/sunset-suv.jpg",thumb:"photos/thumbs/sunset-suv.jpg",w:2000,h:1333,alt:"White Volvo SUV parked at sunset under a pink sky, a wind turbine in the distance"},
 ];
 
 // VIDEOS: while there are none, the page shows "coming soon".
@@ -329,14 +330,36 @@ document.getElementById('reel-wrap').hidden=!reel.yt;
 document.getElementById('films-soon').hidden=!!(reel.yt||films.length);
 
 const pgrid=document.getElementById('photo-grid');
-photos.forEach((p,i)=>{
-  const b=document.createElement('button');b.className='photo';b.dataset.photo=i;
+const photoEls=photos.map((p,i)=>{
+  const b=document.createElement('button');b.className='photo';b.dataset.photo=i;b.dataset.ar=(p.w&&p.h)?p.w/p.h:1.5;
   const im=new Image();im.src=p.thumb||p.src;im.alt=p.alt||'Photo '+(i+1);im.loading='lazy';im.decoding='async';
-  if(p.w&&p.h){im.width=p.w;im.height=p.h;}
-  b.appendChild(im);pgrid.appendChild(b);
+  b.appendChild(im);return b;
 });
+// Rows of equal height that fill the full width, so nothing is cropped. Phones get one photo per row.
+const GAP=12;let gridW=0;
+function layoutPhotos(){
+  const W=pgrid.clientWidth;if(!photoEls.length||!W)return;gridW=W;
+  const single=W<560,T=Math.max(200,Math.min(420,W*.28));   // T = target row height
+  const rows=[];let cur=[],sum=0;
+  photoEls.forEach(el=>{
+    const ar=+el.dataset.ar;
+    if(single){rows.push({els:[el],h:W/ar});return;}
+    cur.push(el);sum+=ar;
+    const h=(W-GAP*(cur.length-1))/sum;
+    if(h<=T){rows.push({els:cur,h});cur=[];sum=0;}
+  });
+  if(cur.length){const h=(W-GAP*(cur.length-1))/sum;rows.push({els:cur,h:h<=T*2?h:T});}   // last row fills the width unless that makes it too tall
+  pgrid.replaceChildren(...rows.map(r=>{
+    const row=document.createElement('div');row.className='prow';
+    r.els.forEach(el=>{el.style.height=r.h+'px';el.style.width=Math.floor(r.h*el.dataset.ar*100)/100+'px';row.appendChild(el);});
+    return row;
+  }));
+}
 pgrid.hidden=!photos.length;
 document.getElementById('photos-soon').hidden=photos.length>0;
+layoutPhotos();
+const relayout=()=>{if(Math.abs(pgrid.clientWidth-gridW)>1)layoutPhotos();};
+if('ResizeObserver' in window)new ResizeObserver(relayout).observe(pgrid);else addEventListener('resize',relayout);
 
 const dlg=document.getElementById('player'),screen=document.getElementById('screen');
 document.addEventListener('click',e=>{
@@ -359,7 +382,7 @@ const pad=n=>String(n).padStart(2,'0');
 function showPhoto(i){
   const n=photos.length;cur=(i+n)%n;const p=photos[cur];
   lbImg.classList.remove('on');lbImg.src=p.src;lbImg.alt=p.alt||'Photo '+(cur+1);
-  lbCount.textContent=pad(cur+1)+' / '+pad(n);lbCap.textContent=p.alt||'';
+  lbCount.textContent=pad(cur+1)+' / '+pad(n);lbCap.textContent=p.title||'';
   [cur-1,cur+1].forEach(k=>{const q=photos[(k+n)%n];if(q)new Image().src=q.src;});
 }
 const step=d=>showPhoto(cur+d);
