@@ -1,0 +1,33 @@
+/* shotswithgeorge – shared design tokens (tweak colours/fonts here to match the reference exactly) */
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap');
+:root{
+  --bg:#0a0a0a; --bg2:#111; --fg:#f4f4f2; --muted:#8c8c88; --line:#232323;
+  --font:'Inter Tight','Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-weight:300;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.logo{font-weight:500;letter-spacing:.02em;font-size:1.05rem;text-transform:lowercase}
+.logo b{font-weight:300;color:var(--muted)}
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:26px 4vw;mix-blend-mode:difference}
+.nav ul{display:flex;gap:32px;list-style:none}
+.nav a{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.85;transition:opacity .3s}
+.nav a:hover{opacity:1}
+.label{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+/* placeholder media: swap for <img>/<video> */
+.ph{position:relative;background:linear-gradient(135deg,var(--c1,#1c1c1c),var(--c2,#0d0d0d));overflow:hidden}
+.ph::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 20%,rgba(255,255,255,.07),transparent 55%)}
+.ph span{position:absolute;left:16px;bottom:14px;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:#ffffff55;z-index:1}
+.t1{--c1:#2a2622;--c2:#0e0d0c}.t2{--c1:#1d2328;--c2:#0b0d0e}.t3{--c1:#2b2326;--c2:#0e0b0c}.t4{--c1:#242820;--c2:#0c0d0b}.t5{--c1:#26242d;--c2:#0c0b0e}.t6{--c1:#2d2a22;--c2:#0e0d0b}
+.services{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border-block:1px solid var(--line)}
+.services>div{background:var(--bg);padding:56px 4vw}
+.services h3{font-weight:400;font-size:clamp(1.6rem,3vw,2.6rem);letter-spacing:-.02em;margin:14px 0}
+.services p{color:var(--muted);max-width:42ch}
+.contact{padding:18vh 4vw 10vh;text-align:center}
+.contact h2{font-weight:300;font-size:clamp(2.4rem,8vw,7rem);letter-spacing:-.04em;line-height:1}
+.btn{display:inline-block;margin-top:40px;padding:16px 38px;border:1px solid var(--fg);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;transition:.3s}
+.btn:hover{background:var(--fg);color:var(--bg)}
+footer{display:flex;justify-content:space-between;padding:28px 4vw;border-top:1px solid var(--line)}
+.back{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:60;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;background:#fff;color:#000;padding:9px 18px;border-radius:99px}
+@media(max-width:760px){.nav ul{gap:16px}.services{grid-template-columns:1fr}}

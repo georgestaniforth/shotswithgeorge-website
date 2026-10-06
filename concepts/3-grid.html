@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>shotswithgeorge</title><link rel="stylesheet" href="shared.css"><style>
+.top{padding:20vh 4vw 6vh;display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:24px}
+.top h1{font-weight:300;font-size:clamp(2rem,5vw,4.5rem);letter-spacing:-.04em;line-height:1}
+.filters{display:flex;gap:26px}.filters button{background:none;border:0;color:var(--muted);font:inherit;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;padding-bottom:4px;border-bottom:1px solid transparent}
+.filters button.on,.filters button:hover{color:var(--fg);border-color:var(--fg)}
+.grid{columns:3;column-gap:6px;padding:0 6px 14vh}
+.grid a{display:block;margin-bottom:6px;break-inside:avoid;position:relative}
+.grid .ph{transition:filter .4s}.grid:hover .ph{filter:brightness(.55)}.grid a:hover .ph{filter:none}
+.grid a.hide{display:none}
+.tag{position:absolute;left:14px;top:12px;z-index:2;opacity:0;transition:.3s}.grid a:hover .tag{opacity:1}
+@media(max-width:900px){.grid{columns:2}}@media(max-width:560px){.grid{columns:1}}
+</style></head><body><header class="nav"><a class="logo" href="../index.html">shotswithgeorge</a><ul><li><a href="#work">Work</a></li><li><a href="#services">Services</a></li><li><a href="#contact">Contact</a></li></ul></header>
+<section class="top" id="work"><h1>Selected<br>work</h1><div class="filters"><button class="on" data-f="all">All</button><button data-f="film">Film</button><button data-f="photo">Photo</button><button data-f="social">Social</button></div></section>
+<section class="grid">
+<a data-k="film" href="#"><div class="ph t1" style="aspect-ratio:16/10"><span>Film</span></div><span class="tag label">Project One</span></a>
+<a data-k="photo" href="#"><div class="ph t2" style="aspect-ratio:4/5"><span>Photo</span></div><span class="tag label">Project Two</span></a>
+<a data-k="social" href="#"><div class="ph t3" style="aspect-ratio:9/14"><span>Social</span></div><span class="tag label">Project Three</span></a>
+<a data-k="photo" href="#"><div class="ph t4" style="aspect-ratio:1"><span>Photo</span></div><span class="tag label">Project Four</span></a>
+<a data-k="film" href="#"><div class="ph t5" style="aspect-ratio:16/9"><span>Film</span></div><span class="tag label">Project Five</span></a>
+<a data-k="social" href="#"><div class="ph t6" style="aspect-ratio:4/5"><span>Social</span></div><span class="tag label">Project Six</span></a>
+<a data-k="photo" href="#"><div class="ph t2" style="aspect-ratio:3/4"><span>Photo</span></div><span class="tag label">Project Seven</span></a>
+<a data-k="film" href="#"><div class="ph t4" style="aspect-ratio:16/10"><span>Film</span></div><span class="tag label">Project Eight</span></a>
+<a data-k="social" href="#"><div class="ph t1" style="aspect-ratio:9/14"><span>Social</span></div><span class="tag label">Project Nine</span></a></section>
+<section class="services" id="services"><div><span class="label">01 — One-off shoots</span><h3>Single projects</h3><p>Brand films, events, portraits and campaign photography, delivered as a single commission.</p></div><div><span class="label">02 — Retainers</span><h3>Monthly content</h3><p>A steady stream of social-first video and photo content, planned and shot every month.</p></div></section><section class="contact" id="contact"><span class="label">Available for bookings</span><h2>Let’s make<br>something.</h2><a class="btn" href="mailto:hello@shotswithgeorge.com">Get in touch</a></section><footer><span class="label">© 2026 shotswithgeorge</span><span class="label">Instagram · YouTube · Vimeo</span></footer><a class="back" href="../index.html">← All concepts</a>
+<script>document.querySelectorAll('.filters button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters button').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.grid a').forEach(a=>a.classList.toggle('hide',b.dataset.f!='all'&&a.dataset.k!=b.dataset.f))})</script></body></html>

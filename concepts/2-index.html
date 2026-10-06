@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>shotswithgeorge</title><link rel="stylesheet" href="shared.css"><style>
+.wrap{min-height:100vh;padding:22vh 4vw 10vh}
+.intro{max-width:34ch;color:var(--muted);margin-bottom:12vh;font-size:1.05rem}
+.list a{display:flex;justify-content:space-between;align-items:baseline;padding:22px 0;border-top:1px solid var(--line);transition:padding .4s,opacity .3s}
+.list:hover a{opacity:.3}.list a:hover{opacity:1;padding-left:20px}
+.list a:last-child{border-bottom:1px solid var(--line)}
+.list h3{font-weight:300;font-size:clamp(2rem,6vw,5.5rem);letter-spacing:-.04em;line-height:1}
+#peek{position:fixed;width:300px;aspect-ratio:4/5;pointer-events:none;z-index:40;opacity:0;transform:translate(-50%,-50%) scale(.9);transition:opacity .3s,transform .3s}
+#peek.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+@media(hover:none){#peek{display:none}}
+</style></head><body><header class="nav"><a class="logo" href="../index.html">shotswithgeorge</a><ul><li><a href="#work">Work</a></li><li><a href="#services">Services</a></li><li><a href="#contact">Contact</a></li></ul></header>
+<div class="wrap" id="work"><p class="intro">Photographer and filmmaker creating cinematic content for brands and creators.</p>
+<div class="list">
+<a href="#" data-c="t1"><h3>Project One</h3><span class="label">Film — 2026</span></a>
+<a href="#" data-c="t2"><h3>Project Two</h3><span class="label">Photo — 2026</span></a>
+<a href="#" data-c="t3"><h3>Project Three</h3><span class="label">Social — 2026</span></a>
+<a href="#" data-c="t4"><h3>Project Four</h3><span class="label">Film — 2025</span></a>
+<a href="#" data-c="t5"><h3>Project Five</h3><span class="label">Photo — 2025</span></a>
+<a href="#" data-c="t6"><h3>Project Six</h3><span class="label">Brand — 2025</span></a></div></div>
+<div id="peek" class="ph"><span>Preview</span></div>
+<section class="services" id="services"><div><span class="label">01 — One-off shoots</span><h3>Single projects</h3><p>Brand films, events, portraits and campaign photography, delivered as a single commission.</p></div><div><span class="label">02 — Retainers</span><h3>Monthly content</h3><p>A steady stream of social-first video and photo content, planned and shot every month.</p></div></section><section class="contact" id="contact"><span class="label">Available for bookings</span><h2>Let’s make<br>something.</h2><a class="btn" href="mailto:hello@shotswithgeorge.com">Get in touch</a></section><footer><span class="label">© 2026 shotswithgeorge</span><span class="label">Instagram · YouTube · Vimeo</span></footer><a class="back" href="../index.html">← All concepts</a>
+<script>const p=document.getElementById('peek');document.querySelectorAll('.list a').forEach(a=>{a.onmouseenter=()=>{p.className='ph on '+a.dataset.c};a.onmouseleave=()=>{p.classList.remove('on')}});
+addEventListener('mousemove',e=>{p.style.left=e.clientX+'px';p.style.top=e.clientY+'px'})</script></body></html>
